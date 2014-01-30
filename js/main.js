@@ -131,6 +131,10 @@ function loadSettings(tile)
          //Reload view and edit side of favorites
          populateBookmarks($("#bookmarks").data("encodedbookmarks"));
          break;
+      case "minecraft":
+         //Reload Minecraft player count
+         populateMinecraft($("#minecraft").data("name"), $("#minecraft").data("api"));
+         break;
       default:
          //console.log("unhandled switch: " + tile);
    }
@@ -686,6 +690,26 @@ $("#bookmarks").children(".content").children(".inner").children("ul").on("click
       e.preventDefault();
    }
 });
+
+/////////////////////////////////////////////
+//Minecraft
+/////////////////////////////////////////////
+function populateMinecraft(name, ip)
+{
+   //Data is fetched from a server printing JSON data from xPaw's php minecraft class
+   $("#minecraft-server").text(name);
+   $.ajax({
+      url: ip,
+      dataType: "json",
+      async: true,
+      success: function(json) {
+         $("#minecraft-players").text(json.Players + " Players Online");
+      },
+      error: function(xhr, textStatus, error) {
+         $("#minecraft-players").text("Error fetching server status");
+      }
+   });
+}
 
 function showAddModal()
 {
