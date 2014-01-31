@@ -694,21 +694,30 @@ $("#bookmarks").children(".content").children(".inner").children("ul").on("click
 /////////////////////////////////////////////
 //Minecraft
 /////////////////////////////////////////////
-function populateMinecraft(name, ip)
+function populateMinecraft(name, api)
 {
-   //Data is fetched from a server printing JSON data from xPaw's php minecraft class
+   //Set the server name
+   if (!name) {
+      name = "Minecraft Server";
+   }
    $("#minecraft-server").text(name);
-   $.ajax({
-      url: ip,
-      dataType: "json",
-      async: true,
-      success: function(json) {
-         $("#minecraft-players").text(json.Players + " Players Online");
-      },
-      error: function(xhr, textStatus, error) {
-         $("#minecraft-players").text("Error fetching server status");
-      }
-   });
+   
+   if (api) {
+      //Data is fetched from a server printing JSON data from xPaw's php minecraft class
+      $.ajax({
+         url: api,
+         dataType: "json",
+         async: true,
+         success: function(json) {
+            $("#minecraft-players").text(json.Players + " Player(s) Online");
+         },
+         error: function(xhr, textStatus, error) {
+            $("#minecraft-players").text("Error fetching server info");
+         }
+      });
+   } else {
+      $("#minecraft-players").text("No server API defined");
+   }
 }
 
 function showAddModal()
