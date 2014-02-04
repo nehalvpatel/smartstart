@@ -133,7 +133,7 @@ function loadSettings(tile)
          break;
       case "minecraft":
          //Reload Minecraft player count
-         populateMinecraft($("#minecraft").data("name"), $("#minecraft").data("api"));
+         populateMinecraft($("#minecraft").data("name"), $("#minecraft").data("ip"));
          break;
       default:
          //console.log("unhandled switch: " + tile);
@@ -694,7 +694,7 @@ $("#bookmarks").children(".content").children(".inner").children("ul").on("click
 /////////////////////////////////////////////
 //Minecraft
 /////////////////////////////////////////////
-function populateMinecraft(name, api)
+function populateMinecraft(name, ip)
 {
    //Set the server name
    if (!name) {
@@ -702,21 +702,25 @@ function populateMinecraft(name, api)
    }
    $("#minecraft-server").text(name);
    
-   if (api) {
-      //Data is fetched from a server printing JSON data from xPaw's php minecraft class
+   if (ip) {
+      //Data is fetched from minecraft-api.com
       $.ajax({
-         url: api,
+         url: "http://minecraft-api.com/v1/get/?server=" + ip,
          dataType: "json",
          async: true,
          success: function(json) {
-            $("#minecraft-players").text(json.Players + " Player(s) Online");
+            if (json.hasOwnProperty("error")) {
+               $("#minecraft-players").text(json.error);
+            } else {
+               $("#minecraft-players").text(json.players.online + " Player(s) Online");
+            }
          },
          error: function(xhr, textStatus, error) {
             $("#minecraft-players").text("Error fetching server info");
          }
       });
    } else {
-      $("#minecraft-players").text("No server API defined");
+      $("#minecraft-players").text("No server IP defined");
    }
 }
 
