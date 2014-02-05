@@ -736,6 +736,10 @@ function populateMinecraft(name, ip)
       });
    } else {
       $("#minecraft-players").text("No server IP defined");
+      
+      $("#minecraftview .loader").hide();
+      $("#minecraftview h2").show();
+      $("#minecraftview h4").show();
    }
 }
 
